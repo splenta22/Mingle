@@ -1,21 +1,53 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import React from "react"
-import {Input, NativeBaseProvider} from "native-base"
+import {Input, NativeBaseProvider, Button} from "native-base"
 
 class Launch extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showPass : false,
+            loggedIn: false,
+            email: "",
+            pass: "",
+        }
+
+        this.handleEmailOnChange = this.handleEmailOnChange.bind(this);
+        this.handlePasswordOnChange = this.handlePasswordOnChange.bind(this);
+
+    }
+
+    handleEmailOnChange(event) {
+        this.setState({email: event.target.value})
+    }
+
+    handlePasswordOnChange(event) {
+        this.setState({pass: event.target.value})
+    }
+
+    handleLoginOnClick() {
+        // Firebase logic for login
+    }
 
 
     render() {
         return (
         <NativeBaseProvider>
            <View style={styles.container}>
-                <Text>Hi Jon!</Text>
-                <Input size="md" placeholder='email'></Input>
+                <Input size="md" placeholder='email' autoCapitalize={false} onChange={this.handleEmailOnChange} ></Input>
+                <Input size="md" placeholder='password' type={this.state.show ? "text": "password"} onChange={this.handlePasswordOnChange}></Input>
+                <Button size="md">Login!</Button>
            </View>
         </NativeBaseProvider>
-        );
+        )
     }
+
+
+
+
+
 }
 
 

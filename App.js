@@ -2,8 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Launch from "./src/screens/launch"
 import React from "react"
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-
+const Stack = createNativeStackNavigator()
 
 class App extends React.Component {
 
@@ -11,7 +13,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <Launch/>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen
+            name="Launch"
+            component={Launch}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
