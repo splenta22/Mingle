@@ -4,6 +4,7 @@ import React from "react"
 import {Input, NativeBaseProvider, Button} from "native-base"
 import {signInWithEmailAndPassword } from "firebase/auth";
 import {auth} from "../../firebaseConfig";
+import ScreenTypes from "../misc/screens"
 
 class Launch extends React.Component {
 
@@ -45,7 +46,7 @@ class Launch extends React.Component {
         signInWithEmailAndPassword(auth, user, pass)
         .then((userCredential) => {
             // Signed in 
-            this.nav("Dashboard");
+            this.nav(ScreenTypes.Dashboard);
             // ...
         })
         .catch((error) => {
