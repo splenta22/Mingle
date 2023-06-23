@@ -54,8 +54,6 @@ class Launch extends React.Component {
             const errorMessage = error.message;
         });
       
-
-
     }
 
 
@@ -66,6 +64,7 @@ class Launch extends React.Component {
                 <Input size="md" placeholder='email' autoCapitalize={false} onChange={this.handleEmailOnChange} ></Input>
                 <Input size="md" placeholder='password' type={this.state.show ? "text": "password"} onChange={this.handlePasswordOnChange}></Input>
                 <Button size="md" onPress = {this.handleLoginOnClick}>Login!</Button>
+                <Button size="md" onPress={() => this.nav("Register")}>Register!</Button>            
            </View>
         </NativeBaseProvider>
         )

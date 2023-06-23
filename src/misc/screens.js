@@ -1,7 +1,8 @@
 const ScreenTypes = {
     Dashboard: "Dashboard",
-    Login: "Login",
+    Launch: "Launch",
     Settings: "Settings",
+    Register: "Register",
 }
 
 export default ScreenTypes
