@@ -1,14 +1,14 @@
 import React from "react"
 import {Text, View, StyleSheet} from "react-native"
-import {Input, NativeBaseProvider, Button} from "native-base"
+import {Input, NativeBaseProvider, Button, Alert} from "native-base"
 import { auth } from "../../firebaseConfig";
 import ScreenTypes from "../misc/screens";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
 
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        
+
         this.nav = this.props.navigation.navigate
         this.state = {
             show: false,
@@ -29,31 +29,62 @@ class Register extends React.Component {
         let pass = this.state.pass;
         let confirmPass = this.state.confirmPass;
 
-        //TO-DO: Create Alert / Indicator if passwords do not match is off
-        if (pass !== confirmPass)
-            return
-        
-        createUserWithEmailAndPassword(auth, email, pass)
-        .then((userCredential) => {
-            //Create banner for success
-            this.nav(ScreenTypes.Launch);
+        // Password criteria
+        if (pass.length < 8) {
+            Alert.alert("Password must be at least 8 characters long");
+            return;
+        }
 
+        // Password criteria
+        const passwordRegex = /^(?=.*[0-9!@#$%^&*]).*$/;
+        if (!passwordRegex.test(pass)) {
+            Alert.alert(
+                "Password must contain at least one number and special character (@, %, &, $, etc)"
+            );
+            return;
+        }
 
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorMessage);
-            // ..
-        });
-        
+        // Email criteria
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
+            Alert.alert("Invalid email format");
+            return;
+        }
 
-
+        // Check if email already exists
+        fetchSignInMethodsForEmail(auth, email)
+            .then((signInMethods) => {
+                if (signInMethods.length > 0) {
+                    Alert.alert("Email already exists. Please use a different email.");
+                } else {
+                    //TO-DO: Create Alert / Indicator if passwords do not match is off
+                    if (pass !== confirmPass)
+                        return
+                    // Create user
+                    createUserWithEmailAndPassword(auth, email, pass)
+                        .then((userCredential) => {
+                            // Create banner for success
+                            this.nav(ScreenTypes.Launch);
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.log(errorMessage);
+                            // ..
+                        });
+                }
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorMessage);
+                // ..
+            });
     }
 
     handleEmailField(event) {
         this.setState({email: event.nativeEvent.text})
-    
+
     }
 
     handlePassField(event) {
@@ -83,11 +114,11 @@ class Register extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 10,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+        flex: 10,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-  });
+});
 
 export default Register;
